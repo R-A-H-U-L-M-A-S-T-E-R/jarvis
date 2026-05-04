@@ -1,36 +1,35 @@
 {
-    "name": "Jarvis-md",
-    "version": "3.5.0",
+    "name": "jarvis",
+    "version": "3.0.0",
     "description": "A simple WhatsApp Bot Based On WhiskeySockets/Baileys",
     "main": "index.js",
     "scripts": {
         "postinstall": "node -e \"try { require('sharp') } catch (e) { process.exit(1); }\" || npm install sharp@0.32.6 --no-save",
-        "start": "pm2 start . --attach --name Jarvis-md",
-        "stop": "pm2 stop Jarvis-md"
+        "start": "pm2 start . --attach --name jarvis",
+        "stop": "pm2 stop jarvis"
     },
     "engines": {
         "node": ">=18.0.0 <=24.x"
     },
     "license": "MIT",
     "dependencies": {
-        "@whiskeysockets/baileys": "^6.7.17",
-        "async-lock": "^1.4.1",
+        "@whiskeysockets/baileys": "^7.0.0-rc.9",
+        "audio-decode": "^2.2.2",
         "browser-id3-writer": "^4.4.0",
         "cheerio": "^1.0.0",
-        "node-cron": "^3.0.3",
-        "jarvis-md": "^1.0.7",
-        "jimp": "^0.16.1",
+        "file-type": "^16.5.4",
         "fluent-ffmpeg": "^2.1.2",
         "form-data": "^4.0.0",
-        "link-preview-js": "^3.0.4",
+        "jarvis-md": "^1.0.7",
         "libphonenumber-js": "^1.12.6",
+        "link-preview-js": "^3.0.4",
+        "node-cron": "^3.0.3",
         "node-webpmux": "^3.2.0",
-        "pdfkit": "^0.17.1",
-        "pm2": "^5.4.2",
-        "audio-decode": "^2.2.2",
-        "sharp": "0.32.6",
         "pg": "^8.7.3",
+        "pm2": "^5.4.2",
+        "qrcode-terminal": "^0.12.0",
         "sequelize": "^6.21.4",
+        "sharp": "0.32.6",
         "simple-git": "^3.20.0",
         "sqlite3": "^5.0.11"
     }
