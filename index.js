@@ -1,8 +1,8 @@
 global.server = require('./config').VPS ? "VPS" : process.env.PWD?.includes("userland") ? "USERLAND" : process.env.PITCHER_API_BASE_URL?.includes("codesandbox") ? "CODESANDBOX" : process.env.REPLIT_USER ? "REPLIT" : process.env.AWS_REGION ? "AWS" : process.env.TERMUX_VERSION ? "TERMUX" : process.env.DYNO ? "HEROKU" : process.env.KOYEB_APP_ID ? "KOYEB" : process.env.GITHUB_SERVER_URL ? "GITHUB" : process.env.RENDER ? "RENDER" : process.env.RAILWAY_SERVICE_NAME ? "RAILWAY" : process.env.VERCEL ? "VERCEL" : process.env.DIGITALOCEAN_APP_NAME ? "DIGITALOCEAN" : process.env.AZURE_HTTP_FUNCTIONS ? "AZURE" : process.env.NETLIFY ? "NETLIFY" : process.env.FLY_IO ? "FLY_IO" : process.env.CF_PAGES ? "CLOUDFLARE" : process.env.SPACE_ID ? "HUGGINGFACE" : require("os").platform().toUpperCase();
 const http = require('http');
 const axios = require('axios');
-const PORT = process.env.PORT || 3000;
-const { config, Jarvis } = require("./lib");
+const PORT = process.env.PORT || Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
+const { Jarvis } = require("./lib/Base/");
 const { removeFiles } = require("./plugins/client/");
 const url = server === "RENDER" ? process.env.RENDER_EXTERNAL_URL : server === "KOYEB" ? "https://" + KOYEB_PUBLIC_DOMAIN : false;
 
@@ -30,4 +30,4 @@ setInterval(() => {
   ).catch(e =>
     console.log(`[${new Date().toISOString()}] Down! ${e.message}`)
   );
-}, 3 * 60 * 1000);
+}, 5 * 60 * 1000);
