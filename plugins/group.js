@@ -606,4 +606,3 @@ System({
     };
     await message.send(match === "all" ? '_*Reject all*_' : '_*Reject selected members*_');
 });
-

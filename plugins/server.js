@@ -9,10 +9,9 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, isPrivate, shell, changeVar, setData, config: Config, platform: { heroku, koyeb, render, railway }, bot } = require("../lib/");
+const { System, changeVar, setData, config: Config, platform: { heroku, koyeb, render, railway }, bot } = require("../lib/");
 const { version } = require('../package.json');
 const simpleGit = require("simple-git");
-const { sleep } = require('./client/');
 const pm2 = require("pm2");
 const git = simpleGit();
 
@@ -123,8 +122,10 @@ System({
     };
     let s = '\n*All Your Vars*\n\n';
     for (const key in Config) {
-        s += `*${key}*: ${Config[key]}\n\n`;
-    }
+       if (process.env[key]){
+         s += `*${key}*: ${Config[key]}\n\n`;
+         }
+       };
     await message.reply(s);
 });
 

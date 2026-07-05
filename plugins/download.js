@@ -1,4 +1,4 @@
-const { System, isPrivate, config, toAudio, instaDL, mediafireDl } = require("../lib/");
+const { System, isPrivate, config, toAudio, instaDL, mediafireDl, apkDl, pinDl } = require("../lib/");
 const { extractUrlsFromText, sleep, getJson, isUrl, IronMan, getBuffer } = require('./client/');
 
 System({
@@ -33,8 +33,8 @@ System({
 }, async (message, match, m) => {
   let appId = match || m.reply_message.text;
   if (!appId) return await message.reply('*Nᴇᴇᴅ ᴀɴ ᴀᴘᴘ ɴᴀᴍᴇ*\n*Exᴀᴍᴘʟᴇ: ꜰʀᴇᴇ ꜰɪʀᴇ*');
-  const { result: appInfo } = await getJson(api + "download/aptoide?id=" + appId);
-  await message.reply({ url: appInfo.link }, { mimetype: 'application/vnd.android.package-archive', fileName: appInfo.appname, caption: `*App Name:* ${appInfo.appname}\n*Developer:* ${appInfo.developer}`, quoted: message.data }, "document");
+  const result= await apkDl(appId);
+  await message.reply({ url: result.link }, { mimetype: 'application/vnd.android.package-archive', fileName: result.appname, caption: `*App Name:* ${result.appname}\n*Developer:* ${result.developer}`, quoted: message.data }, "document");
 });
 
 System({
@@ -47,7 +47,7 @@ System({
     if (!match) return await message.reply("*Need a Facebook public media link*\n_Example: .fb_\n*NOTE: ONLY VIDEO LINK*");
     const { result } = await getJson(api + "download/facebook?url=" + match);
     if (!result || (!result.hd && !result.sd)) return await message.reply("Could not fetch video. Please check the link.");
-    if (!message.isGroup) return await message.sendFromUrl(result.hd, { quoted: message.data });
+    if (!message.isGroup) return await message.sendFromUrl(result.sd, { quoted: message.data });
     await message.send("Choose Quality", { values: [{ displayText: "HD", id: `sendurl ${result.hd}` }, { displayText: "SD", id: `sendurl ${result.sd}` }], onlyOnce: true, withPrefix: true, participates: [message.sender] }, "poll");
 });
 
@@ -60,10 +60,10 @@ System({
     desc: "pinterest downloader"
 }, async (message, text, m) => {
     let match = (await extractUrlsFromText(text || message.reply_message.text))[0];
-    if (!match) return await message.reply('_Please provide a pinterest *url*');
+    if (!match) return await message.reply('_Please provide a pinterest *url*_');
     if (!isUrl(match)) return await message.reply("_Please provide a valid pinterest *url*");
     if (!match.includes("pin.it")) return await message.reply("_Please provide a valid pinterest *url*");
-    const { result } = await getJson(api + "download/pinterest?url=" + match);
+    const result = await pinDl(match);
     await message.sendFromUrl(result.url, { caption: "_*downloaded 🤍*_" });
 });
 
@@ -111,47 +111,6 @@ System({
   for (const media of result) {
     await message.sendFromUrl(media.url, { quoted: message.data });
   }
-});
-
-System({
-  pattern: 'soundcloud',
-  fromMe: isPrivate,
-  desc: 'SoundCloud downloader',
-  type: 'download',
-}, async (message, match) => {
-  const link = (await extractUrlsFromText(match || message.reply_message.text))[0];
-  if (!link || !link.includes('soundcloud')) return await message.send("*Need a SoundCloud link to download*\n_Example: .soundcloud https://m.soundcloud.com/corpse_husband/life-waster_");
-    const response = await getJson(IronMan(`ironman/soundcloud/download?link=${link}`));
-    await message.send(`*Downloading ${response.title}*`);
-    const result = await toAudio(await getBuffer(IronMan(`ironman/scdl?url=${link}`)), 'mp3');
-    await message.reply(result, {
-      mimetype: 'audio/mpeg',
-      linkPreview: {
-          title: response.title,
-          body: '*Jarvis-md*',
-          thumbnail: await getBuffer(response.thumb),
-          sourceUrl: link,
-          showAdAttribution: false,
-          renderLargerThumbnail: true
-        }
-    }, "audio");
-});
-
-System({
-    pattern: 'livewp',
-    fromMe: isPrivate,
-    desc: 'Download live wallpapers',
-    type: 'download',
-}, async (message, match) => {
-    match = match || message.reply_message.text;
-    if (!match) return await message.send("*Need a query to search for live wallpapers*\n_Example: .livewp furina_");           
-    const data = await getJson(IronMan(`Ironman/live/wallpaper?query=${match}`));
-    const { Title, Preview_url, Mobile, Desktop } = data;
-    await message.reply({ url: Preview_url }, { caption: `*${Title}*` }, "video");
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    await message.reply({ url: Mobile.Download_url }, { caption: `「 *MOBILE VERSION* 」\n\n *➥Title:* ${Mobile.Caption}\n *➥Size:* ${Mobile.Size}` }, "video");
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    await message.reply({ url: Desktop.Download_url }, { caption: `「 *DESKTOP VERSION* 」\n\n *➥Title:* ${Desktop.Caption}\n *➥Quality:* ${Desktop.Quality}\n *➥Size:* ${Desktop.Size}` }, "video"); 
 });
 
 System ({
@@ -312,7 +271,7 @@ System({
 System({
 	pattern: '(xnxx|xvd)',
 	fromMe: isPrivate,
-        nsfw: true,
+    nsfw: true,
 	type: "download",
         desc: "xnxx downloader",
 }, async (message, match) => {

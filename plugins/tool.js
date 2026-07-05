@@ -9,21 +9,8 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System, sendAlive, setData, getData, isPrivate, config, database, removeData, removeCmd, bot, sendMention } = require("../lib/");  
+const { System, sendAlive, setData, getData, isPrivate, config, database, removeData, removeCmd, sendMention } = require("../lib/");  
 const { getUptime, Runtime } = require("./client/"); 
-
-System({
-	pattern: "(ping|speed)",
-	fromMe: isPrivate,
-	type: "tool",
-	desc: "To check ping",
-	adminAccess: true,
-}, async (message) => {
-	const start = new Date().getTime();
-	const ping = await message.send("*𝆺𝅥 running 𝆺𝅥*");
-	const end = new Date().getTime();
-	return await ping.edit("*☇ ꜱᴩᷨᴇͦᴇͭᴅ ☁ :* " + (end - start) + " *ᴍꜱ* ");
-});
 
 System({
     pattern: 'mention',
@@ -41,16 +28,6 @@ System({
        return await message.reply(update ? '_Mention Updated_' : '_Error in updating_');
    };
    return await message.reply("_Check mention format at https://github.com/Loki-Xer/Jarvis-md/wiki_");
-});
-
-System({
-    pattern: "(vv|view)",
-    fromMe: true,
-    type: "tool",
-    desc: "get view ones message"
-}, async (message) => {
-   if (!message.reply_message.viewones) return await message.reply("_*Reply to a view once*_");
-   return await message.client.forwardMessage(message.chat, message.reply_message.message, { readViewOnce: true });
 });
 
 System({
@@ -74,16 +51,6 @@ System({
     const runtime = await Runtime(loginData.message);
     if(m.fromMe) return await m.edit(runtime);
     m.reply(runtime);
-});
-
-System({
-   pattern: "reboot",
-   fromMe: true,
-   desc: "to reboot your bot",
-   type: "tool",
-}, async (message, match) => {
-    await message.reply('_Rebooting..._')
-    bot.restart();
 });
 
 System({

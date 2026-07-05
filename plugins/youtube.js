@@ -15,8 +15,8 @@ const {
     System,
     config,
     YtInfo,
-    youtube,
     toAudio,
+    youtube,
     isPrivate,
 } = require('../lib/');
 const { isUrl, getBuffer, AddMp3Meta, extractUrlsFromText } = require('./client/');

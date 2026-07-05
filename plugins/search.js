@@ -10,61 +10,9 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-const { System, isPrivate, Yahoo, gits } = require("../lib/");
+const { System, isPrivate, bing } = require("../lib/");
 const { IronMan, getJson, isUrl } = require('./client/');
 
-System({
-        pattern: "yahoo",
-        fromMe: isPrivate,
-        desc: "yahoo search (short)",
-        type: "search"
-}, async (message, match) => {
-        if (!match) return message.send("*Need a query to search*\n_Example: who is iron man, images or video_");
-        let [text, type] = match.split(',').map(s => s.trim());
-        type = ['video','images','search'].includes(type?.toLowerCase()) ? type.toLowerCase() : 'search';
-        const res = await Yahoo[type](text);
-        const pick = res[Math.floor(Math.random() * res.length)];
-        if (type === 'images') {
-          for (const { image, title } of res.sort(() => 0.5 - Math.random()).slice(0, 5)) {
-            await message.send(image, 'image', { caption: title });
-            await new Promise(r => setTimeout(r, 1000));
-          };
-        } else if (type === 'video') {
-                await message.reply({ url: pick.thumbnail }, { caption: `*Title:* ${pick.title}\n*Duration:* ${pick.duration}\n*Time:* ${pick.age}\n*Views:* ${pick.view}\n*Link:* ${pick.link}\n*Source:* ${pick.source}` }, 'image');
-        } else {
-                await message.reply(`*⬢ Title:* ${pick.title}\n*⬢ Description:* _${pick.description}_\n*⬢ Link:* ${pick.link}`);
-        };
-});
-
-
-System({
-        pattern: "scs",
-        fromMe: isPrivate,
-        desc: "SoundCloud search",
-        type: "search"
-}, async (message, match) => {
-        if (!match) return await message.reply("*Need a query to search*\n_Example: .scs life waster_");
-        const fullResult = match.trim().startsWith("-full");
-        const query = fullResult ? match.replace("-full", "").trim() : match.trim();
-        const { result: results } = await getJson(IronMan(`ironman/s/soundcloud?query=${query}`));
-        if (!results || results.length === 0) return await message.send("No results found.");
-        if (fullResult) {
-            let fullit = "";
-            results.forEach(result => {
-                fullit += `*Title*: ${result.title}\n*URL*: ${result.url}\n*Artist*: ${result.artist}\n*Views*: ${result.views}\n*Release*: ${result.release}\n*Duration*: ${result.duration}\n\n`;
-            });
-            await message.send(fullit);
-        } else {
-            const furina = results[0];
-            const { title, artist, views, release, duration, thumb, url } = furina;
-            let caption = `╔═════◇\n\n*➭Title*: ${title}\n*➭Artist*: ${artist}\n*➭Views*: ${views}\n*➭Release*: ${release}\n*➭Duration*: ${duration}\n*➭URL*: ${url}\n\n*Use -full in front of query to get full results*\n_Example: .scs -full ${match}_\n\n╚══════════════════╝`;
-            if (thumb) {
-                await message.send({ url: thumb }, { caption: caption }, "image");
-            } else {
-                await message.send(caption);
-            }
-        }
-});
 
 System({
   pattern: 'img',
@@ -72,37 +20,29 @@ System({
   desc: 'Search google images',
   type: 'search',
 }, async (message, match) => {
-  const [query, count] = match.split(',').map(item => item.trim());
-  const imageCount = count ? parseInt(count, 10) : 5;
+  let [query, count] = match.split(',').map(item => item.trim());
+  let imageCount = count ? parseInt(count) : 5;
   if (!query) return await message.reply("*Need a Query*\n_Example: .img ironman, 5_");
-  const msg = await message.send(`Downloading ${imageCount} images of *${query}*`);
-  const urls = await gits(`${encodeURIComponent(query)}`);
-  if (urls.length === 0) return await message.send("No images found for the query");
-  const list = urls.length <= imageCount ? urls : urls.sort(() => 0.5 - Math.random()).slice(0, imageCount);
-  for (const url of list) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await message.sendFromUrl(url.url)
-  }
+  let msg = await message.send(`Downloading ${imageCount} images of *${query}*`);
+  let urls = await bing(query, { limit: imageCount });
+  if (!urls.length) return await message.send("*No images found*");
+  for (let url of urls) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      try {
+          await message.sendFromUrl(url.image, {
+              caption: url.title
+          });
+      } catch (e) {
+          if (!url.thumbnail) continue;
+          try {
+              await message.sendFromUrl(url.thumbnail, { 
+                caption: url.title 
+              });
+          } catch {}
+      }
+  };
   await msg.edit("*Downloaded*");
 });
-
-System({
-  pattern: 'pstore',
-  fromMe: isPrivate,
-  desc: 'Searches for an app on Play Store',
-  type: 'search',
-}, async (message, match) => {
-  if (!match) return await message.reply("*Nᴇᴇᴅ ᴀɴ ᴀᴘᴘ ɴᴀᴍᴇ*\n*Example.ps WhatsApp*");
-  const query = match.startsWith('-full') ? match.slice(5).trim() : match;
-  const result = await getJson(IronMan(`ironman/search/playstore?app=${query}`));
-  if (match.startsWith('-full')) {
-    const cap = result.map(item => `┈──────────────────────⏣\n*ɴᴀᴍᴇ:* ${item.name}\n*ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${item.developer}\n*ʀᴀᴛᴇ:* ${item.rate2}\n*ʟɪɴᴋ:* ${item.link}\n`).join("\n");
-    await message.send(cap);
-  } else {
-    await message.send({ url: result[0].img }, {
-      caption: `*◦ɴᴀᴍᴇ:* ${result[0].name}\n*◦ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${result[0].developer}\n*◦ʀᴀᴛᴇ:* ${result[0].rate2}\n*◦ʟɪɴᴋ:* ${result[0].link}\n\n*Use -full for all results*\n_Example: .ps -full ${match}_`
-    }, "image");
-}});
 
 System({
     pattern: 'xsearch',
@@ -117,51 +57,13 @@ System({
 });
 
 System({
-    pattern: 'time ?(.*)',
-    fromMe: isPrivate,
-    desc: 'Find Time',
-    type: 'tool',
-}, async (message, match) => {
-    if (!match) return await message.reply("*Need a place name to know time*\n_Example: .time japan_");
-    var p = match.toLowerCase();
-    const res = await fetch(IronMan(`ironman/search/time?loc=${p}`));
-    const data = await res.json();
-    if (data.error === 'no place') return await message.send("_*No place found*_");
-    const { name, state, tz, capital, currCode, currName, phone } = data;
-    const now = new Date();
-    const format12hrs = { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-    const format24hrs = { timeZone: tz, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-    const time12 = new Intl.DateTimeFormat('en-US', format12hrs).formatToParts(now);
-    const time24 = new Intl.DateTimeFormat('en-US', format24hrs).formatToParts(now);
-    const milliseconds = now.getMilliseconds().toString().padStart(3, '0');
-    let time12WithMs = '';
-    time12.forEach(({ type, value }) => {
-        if (type === 'dayPeriod') {
-            time12WithMs += `:${milliseconds} ${value}`;
-        } else {
-            time12WithMs += value;
-        }
-    });
-    const time24WithMs = time24.map(({ value }) => value).join('') + `:${milliseconds}`;
-    let msg = `*ᴄᴜʀʀᴇɴᴛ ᴛɪᴍᴇ*\n(12-hour format): ${time12WithMs}\n(24-hour format): ${time24WithMs}\n`;
-    msg += `*ʟᴏᴄᴀᴛɪᴏɴ:* ${name}\n`;
-    if (state) {
-        msg += `*ꜱᴛᴀᴛᴇ:* ${state}\n`;
-    }
-    msg += `*ᴄᴀᴘɪᴛᴀʟ:* ${capital}\n`;
-    msg += `*ᴄᴜʀʀᴇɴᴄʏ:* ${currName} (${currCode})\n`;
-    msg += `*ᴘʜᴏɴᴇ ᴄᴏᴅᴇ:* +${phone}`;
-    await message.reply(msg);
-});
-
-System({
-    pattern: 'duckgo',
+    pattern: '(duckgo|dg)',
     fromMe: isPrivate,
     type: "search",
     desc: "goduck searcher"
 }, async (message, match) => {
-    if (!match) return await message.reply("*Need a query to search*\n_Example: who is iron man_");
-    const { result } = await getJson(api + "search/duckgo?q=" + match);
-    if(!result.status) return await message.reply("*Can't find try again with more info*");
-    await message.reply({ url: result.image }, { caption: `*⬢ Query :* ${match}\n\n*⬢ Description :* ${result.data}\n\n*⬢ Link :* ${result.url}` }, 'image');
+  if (!match) return await message.reply("*Need a query to search*\n_Example: who is iron man_");
+  let { status, result } = await getJson(api + "search/duckgo?q=" + encodeURIComponent(match));
+  if (!status || !result.length) return await message.reply("*Can't find, try again with more info*");
+  await message.reply(`*⬢ Title :* ${result[0].title}\n\n*⬢ Description :* ${result[0].description}\n\n*⬢ Link :* ${result[0].link}`);    
 });
