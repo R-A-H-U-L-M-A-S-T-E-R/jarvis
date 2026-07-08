@@ -4,7 +4,7 @@ const axios = require('axios');
 const PORT = process.env.PORT || Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
 const { Jarvis } = require("./lib/Base/");
 const { removeFiles } = require("./plugins/client/");
-const url = server === "RENDER" ? process.env.RENDER_EXTERNAL_URL : server === "KOYEB" ? "https://" + KOYEB_PUBLIC_DOMAIN : false;
+const url = server === "RENDER" ? process.env.RENDER_EXTERNAL_URL : server === "KOYEB" ? "https://" + process.env.KOYEB_PUBLIC_DOMAIN : false;
 
 process.env.NODE_OPTIONS = `--max-old-space-size=${Math.floor((require('os').totalmem() / (1024 * 1024)) * 0.6)}`;
 
