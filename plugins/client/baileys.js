@@ -1,4 +1,4 @@
-const { jidDecode } = require("@whiskeysockets/baileys");
+const { jidDecode } = require("baileys");
 
 const decodeJid = (jid) => {
   if (!jid) return jid;
