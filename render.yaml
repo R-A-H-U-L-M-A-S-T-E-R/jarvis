@@ -17,9 +17,9 @@ services:
       - key: DATABASE_URL
         value: "postgresql://aswin:D6dq0vk1xoQx_OO-Iv4ESQ@rough-doxle-2360.7s5.aws-ap-south-1.cockroachlabs.cloud:26257/defaultdb?sslmode=verify-full"
       - key: HANDLER
-        value: "."
+        value: "!"
       - key: WORK_TYPE
-        value: "public"
+        value: "private"
       - key: ERROR_MSG
         value: "true"
       - key: BOT_INFO
@@ -31,7 +31,7 @@ services:
       - key: STICKER_PACKNAME
         value: "ᴃ𝗍／𝗐𝗈𝗋𝗅𝗗𐌌ꙮ⍆ꕶ🌟🐊❳"
       - key: SUDO
-        value: "918149730236"
+        value: "917025673121"
       - key: WARN_COUNT
         value: "3"
       - key: ALLWAYS_ONLINE
@@ -41,6 +41,6 @@ services:
       - key: SAVE_STATUS
         value: "false"
       - key: STATUS_VIEW
-        value: "true"
+        value: "false"
       - key: REJECT_CALL
         value: "false"
