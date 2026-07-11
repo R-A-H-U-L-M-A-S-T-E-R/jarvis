@@ -155,7 +155,7 @@ System({
 }, async (message, match) => {
   const text = message.reply_message.text || match;
   const data = await getJson(IronMan(`ironman/ai/detectai?text=${encodeURIComponent(text)}`));
-  let output = "*𝙰𝙸 𝙳𝙴𝚃𝙴𝙲𝚃𝙸𝙾𝙽*\n\n" + data.slice(0, 3).map((item, i) => `*тєχт:* ${item.text}\n*ѕ¢σяє:* ${(item.score * 100).toFixed(2)}%\n*туρє:* ${item.type}\n\n` + (i === 2 && data.length > 3 ? readMore : '')).join('');
+  let output = "*𝙰𝙸 𝙳𝙴𝚃𝙴𝙲𝚃𝙸𝙾𝙽*\n\n" + data.slice(0, 3).map((item, i) => `*тєχт:* ${item.text}\n*ѕ¢σяє:* ${(item.score * 100).toFixed(2)}%\n*туρє:* ${item.type}\n\n` + (i === 2 && data.length > 3 ? `_+${data.length - 3} more results_` : '')).join('');
   await message.reply(output.trim());
 });
 

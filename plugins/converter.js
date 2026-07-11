@@ -119,7 +119,7 @@ System({
     if (!match && !message.reply_message.message) return await message.reply('\n*Fancy text*\n\n*Example:*\n*reply to a text and : fancy 7*\n*or*\n*use : fancy hy 5*\n\n'+String.fromCharCode(8206).repeat(4001)+fancy.list('Text here',fancy));
     const id = match.match(/\d/g)?.join('')
      try {
-        if (id === undefined && !message.reply_message){
+        if (id === undefined && !message.quoted){
             return await message.reply(fancy.list(match, fancy));
         }
         return await message.reply(fancy.apply(fancy[parseInt(id)-1], message.reply_message.text || match.replace(id,'')))    

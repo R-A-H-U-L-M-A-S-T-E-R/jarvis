@@ -100,6 +100,7 @@ System({
     for (const media of result) {
       await message.sendFromUrl(media, { quoted: message.data });
     }
+    return;
   }
   const url = (await extractUrlsFromText(match))[0];
   if (!url.includes("instagram.com")) return message.reply("_*Provide a valid Instagram story URL*_");

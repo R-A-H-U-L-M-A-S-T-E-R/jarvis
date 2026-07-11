@@ -50,6 +50,6 @@ System({
     if (!jid || !newFormat) return message.reply("-> *Example : delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n->*.delschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*");
     const schedule = await delSchedule(jid, newFormat);
     if(!schedule.status) return await message.send('_Schedule not found_');
-    return await message.send('_Schedule deleted_');
+    await message.send('_Schedule deleted_');
     bot.restart();
 });

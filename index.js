@@ -20,14 +20,15 @@ Jarvis({ isStarted: true });
 setInterval(() => {
   removeFiles("./");
   removeFiles("./lib/temp");
-  if (!url) return;
-  axios.get(url, {
-    timeout: 5000,
-    headers: { 'User-Agent': 'Uptime-Bot' },
-    validateStatus: s => s < 500
-  }).then(r =>
-    console.log(`[${new Date().toISOString()}] Up! ${r.status}`)
-  ).catch(e =>
-    console.log(`[${new Date().toISOString()}] Down! ${e.message}`)
-  );
+  if (url) {
+    axios.get(url, {
+      timeout: 5000,
+      headers: { 'User-Agent': 'Uptime-Bot' },
+      validateStatus: s => s < 500
+    }).then(r =>
+      console.log(`[${new Date().toISOString()}] Up! ${r.status}`)
+    ).catch(e =>
+      console.log(`[${new Date().toISOString()}] Down! ${e.message}`)
+    );
+  }
 }, 5 * 60 * 1000);

@@ -10,13 +10,15 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-const { cropToCircle, createRoundSticker, cropImage } = require("./client/"); 
+const { cropToCircle, createRoundSticker, cropImage, AddMp3Meta, getBuffer } = require("./client/");
 const { Image } = require("node-webpmux");
 const {
     config,
     System,
     isPrivate,
-    webpToPng
+    webpToPng,
+    toAudio,
+    webp2mp4
 } = require("../lib/");
 const stickerPackNameParts = config.STICKER_PACKNAME.split(";");
 
@@ -64,8 +66,7 @@ System({
     const buff = await message.reply_message.download();
     const audioBuffer = Buffer.from(buff);
     const audioResult = await toAudio(audioBuffer, 'mp4');
-    if (match) data = match.split(";");
-    data = config.AUDIO_DATA.split(";");
+    data = match ? match.split(";") : config.AUDIO_DATA.split(";");
     await message.reply(await AddMp3Meta(audioResult, await getBuffer(data[2]), { title: data[0], body: data[1] }), { mimetype: "audio/mp4" }, "audio");
    }
 });

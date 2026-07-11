@@ -10,7 +10,7 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 const { System, isPrivate } = require("../lib/");
-const { getJson, LokiXer } = require('./client/');
+const { getJson, LokiXer, IronMan } = require('./client/');
 
 System({
   pattern: 'manorama',

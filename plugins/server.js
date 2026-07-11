@@ -319,8 +319,9 @@ System({
       break;
     case "RENDER":
       env = await render.setVar("WORK_TYPE", workType);
+      break;
     case "RAILWAY":
-     env = await railway.setVar("WORK_TYPE", workType, m);
+     env = await railway.setVar("WORK_TYPE", workType, message);
      break;
     default:
       env = await changeVar("WORK_TYPE", workType);

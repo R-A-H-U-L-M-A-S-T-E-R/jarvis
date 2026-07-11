@@ -18,7 +18,7 @@ System({
     type: "whatsapp",
     desc: "Give JID of chat/user",
 }, async (message) => {
-    let jid = message.quoted && message.reply_message.i ? message.reply_message.sender : message.jid;
+    let jid = message.quoted ? message.reply_message.sender : message.jid;
     return await message.send(jid);
 });
 

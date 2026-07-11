@@ -247,7 +247,7 @@ System({
     if (!await isBotAdmins(message)) return await message.send("_I'm not an admin_");
     const { welcome } = await getData(message.from);
     if (match.toLowerCase() === 'get') {
-        if (!welcome && !welcome.message) return await message.send('*_Not Set Yet_*');
+        if (!welcome || !welcome.message) return await message.send('*_Not Set Yet_*');
         return await message.send(welcome.message);
     } else if (match.toLowerCase() === 'off') {
         const status = welcome && welcome.status ? welcome.status : 'false';
@@ -278,7 +278,7 @@ System({
     if (!await isBotAdmins(message)) return await message.send("_I'm not an admin_");
     const { exit } = await getData(message.jid);
     if (match.toLowerCase() === 'get') {
-        if (!exit && !exit.message) return await message.send('*_Not Set Yet_*');
+        if (!exit || !exit.message) return await message.send('*_Not Set Yet_*');
         return await message.send(exit.message);
     } else if (match.toLowerCase() === 'off') {
         const status = exit && exit.status ? exit.status : 'false';

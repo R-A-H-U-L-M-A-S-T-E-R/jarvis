@@ -311,7 +311,7 @@ System({
     if (!isadmin) return await message.reply("_bot not admin_");
     const meta = await message.client.groupMetadata(message.jid);
     if (!meta.restrict) return await message.send("_Already everyone can modify group settings_")
-    await messages.client.groupSettingUpdate(message.jid, 'unlocked')
+    await message.client.groupSettingUpdate(message.jid, 'unlocked')
     return await message.send("*Everyone can modify group settings*")
 });
 
