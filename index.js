@@ -1,4 +1,11 @@
 global.server = require('./config').VPS ? "VPS" : process.env.PWD?.includes("userland") ? "USERLAND" : process.env.PITCHER_API_BASE_URL?.includes("codesandbox") ? "CODESANDBOX" : process.env.REPLIT_USER ? "REPLIT" : process.env.AWS_REGION ? "AWS" : process.env.TERMUX_VERSION ? "TERMUX" : process.env.DYNO ? "HEROKU" : process.env.KOYEB_APP_ID ? "KOYEB" : process.env.GITHUB_SERVER_URL ? "GITHUB" : process.env.RENDER ? "RENDER" : process.env.RAILWAY_SERVICE_NAME ? "RAILWAY" : process.env.VERCEL ? "VERCEL" : process.env.DIGITALOCEAN_APP_NAME ? "DIGITALOCEAN" : process.env.AZURE_HTTP_FUNCTIONS ? "AZURE" : process.env.NETLIFY ? "NETLIFY" : process.env.FLY_IO ? "FLY_IO" : process.env.CF_PAGES ? "CLOUDFLARE" : process.env.SPACE_ID ? "HUGGINGFACE" : require("os").platform().toUpperCase();
+process.on('unhandledRejection', (reason) => {
+  console.error('[unhandledRejection]', reason?.stack || reason);
+});
+process.on('uncaughtException', (err) => {
+  console.error('[uncaughtException]', err?.stack || err);
+});
+
 const http = require('http');
 const axios = require('axios');
 const PORT = process.env.PORT || Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
