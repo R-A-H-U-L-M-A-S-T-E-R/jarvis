@@ -8,7 +8,7 @@ process.on('uncaughtException', (err) => {
 
 const http = require('http');
 const axios = require('axios');
-const PORT = process.env.PORT || Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
+const PORT = typeof process.env.PORT === "string" && !Number.isNaN(Number(process.env.PORT)) ? Number(process.env.PORT) : Math.floor(Math.random() * (9999 - 3000 + 1)) + 3000;
 const { Jarvis } = require("./lib/Base/");
 const { removeFiles } = require("./plugins/client/");
 const url = server === "RENDER" ? process.env.RENDER_EXTERNAL_URL : server === "KOYEB" ? "https://" + process.env.KOYEB_PUBLIC_DOMAIN : false;

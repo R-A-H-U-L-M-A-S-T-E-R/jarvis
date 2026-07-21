@@ -6,6 +6,7 @@
     "type": "commonjs",
     "scripts": {
         "postinstall": "npx esbuild node_modules/@whiskeysockets/baileys/lib/index.js --bundle --platform=node --format=cjs --external:jimp --external:sharp --outfile=node_modules/baileys.js",
+        "docker": "pm2-runtime start . --name jarvis",
         "start": "pm2 start . --attach --name jarvis",
         "stop": "pm2 stop jarvis",
         "dev": "node index.js",
